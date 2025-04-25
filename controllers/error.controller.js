@@ -26,7 +26,6 @@ const handleDuplicateRecordDB = (err) => {
 
 const handleValidationError = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
-  console.log("Validation errors", errors);
   const message = `Invalid input data. ${errors.join(". ")}`;
   return new AppError(message, 400);
 };
@@ -49,8 +48,6 @@ const sendProdError = (err, res) => {
 };
 
 const sendDevError = (err, res) => {
-  console.log(err);
-
   res.status(err.statusCode).json({
     status: err.status,
     message: err.message,

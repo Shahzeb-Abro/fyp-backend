@@ -3,6 +3,7 @@ import { detectUlcer } from "../controllers/detection.controller.js";
 const router = Router();
 
 import multer from "multer";
+import { authorize } from "../middlewares/authorize.js";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -15,6 +16,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/", upload.single("file"), detectUlcer);
+router.post("/", authorize, upload.single("file"), detectUlcer);
 
 export default router;

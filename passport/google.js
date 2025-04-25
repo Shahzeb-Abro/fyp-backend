@@ -18,8 +18,6 @@ passport.use(
           $or: [{ googleId: profile.id }, { email: profile._json.email }],
         });
 
-        console.log("Existing user:", existingUser);
-
         if (existingUser) {
           if (existingUser.name !== profile._json.displayName)
             existingUser.name = profile._json.displayName;
