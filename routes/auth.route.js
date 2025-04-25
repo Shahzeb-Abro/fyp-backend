@@ -7,6 +7,7 @@ import {
   logout,
   register,
   resetPassword,
+  signToken,
 } from "../controllers/auth.controller.js";
 import passport from "passport";
 import { authorize } from "../middlewares/authorize.js";
@@ -33,6 +34,7 @@ router.get(
     session: false,
   }),
   (req, res) => {
+    signToken(req?.user?._id, res);
     res.redirect(process.env.FRONTEND_URL);
   }
 );

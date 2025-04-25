@@ -7,7 +7,7 @@ import Email from "../utils/email.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
-const signToken = (id, res) => {
+export const signToken = (id, res) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
