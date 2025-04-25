@@ -28,8 +28,11 @@ app.use(
 );
 
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// For JSON requests
+app.use(express.json({ limit: "10mb" }));
+
+// For form-data (like image uploads)
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.set("view engine", "pug");
 
