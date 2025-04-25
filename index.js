@@ -11,6 +11,7 @@ import globalErrorHandler from "./controllers/error.controller.js";
 
 import authRoutes from "./routes/auth.route.js";
 import detectionRoutes from "./routes/detection.route.js";
+import historyRoutes from "./routes/history.route.js";
 
 import passport from "passport";
 import "./passport/google.js"; // Initialize passport strategie
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/detections", detectionRoutes);
+app.use("/api/v1/history", historyRoutes);
 
 app.use(globalErrorHandler);
 

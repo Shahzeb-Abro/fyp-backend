@@ -54,6 +54,10 @@ export const detectUlcer = catchAsync(async (req, res, next) => {
   });
 
   res.json({
+    status: "success",
     message: "Detected successfully",
+    data: {
+      result: flaskRes.data.class_name,
+    },
   });
 });

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  changePassword,
   forgotPassword,
   getMe,
   login,
@@ -17,6 +18,7 @@ router.post("/register", register);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 router.post("/logout", logout);
+router.post("/change-password", authorize, changePassword);
 
 router.get("/me", authorize, getMe);
 router.get(

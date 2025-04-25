@@ -129,6 +129,29 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   });
 });
 
+export const changePassword = catchAsync(async (req, res, next) => {
+  const { password, newPassword } = req.body;
+
+  const user = await User.findById(req.user._id).select("+password");
+
+  if (!user) {
+    return next(new AppError("No such user exists", 404));
+  }
+
+  if (!(await user.arePasswordsEqual(password, user.password))) {
+    return next(new AppError("Invalid password", 401));
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  const token = signToken(user._id, res);
+  res.status(200).json({
+    status: "success",
+    token,
+    user,
+  });
+});
 export const getMe = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id).select("-password -__v");
 

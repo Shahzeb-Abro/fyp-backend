@@ -6,8 +6,6 @@ import User from "../models/user.model.js";
 export const authorize = catchAsync(async (req, res, next) => {
   const token = req.cookies?.jwt;
 
-  console.log("Token", token);
-
   if (!token) {
     return next(
       new AppError("You are not logged in. Please log in to continue.", 401)
