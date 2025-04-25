@@ -77,7 +77,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   const token = user.createResetPasswordToken();
   await user.save({ validateBeforeSave: false });
 
-  const resetUrl = `${process.env.BASE_URL}/reset-password/${token}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
   console.log("Reset URL", resetUrl);
 
@@ -128,5 +128,33 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     status: "success",
     token,
     user,
+  });
+});
+
+export const getMe = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id).select("-password -__v");
+
+  if (!user) {
+    return next(new AppError("No such user exists", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    user,
+  });
+});
+
+export const logout = catchAsync(async (req, res, next) => {
+  res.cookie("jwt", "loggedout", {
+    maxAge: 5 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    domain:
+      process.env.NODE_ENV === "production" ? ".shahzebabro.com" : undefined,
+  });
+
+  res.status(200).json({
+    status: "success",
   });
 });

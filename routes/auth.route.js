@@ -1,11 +1,14 @@
 import { Router } from "express";
 import {
   forgotPassword,
+  getMe,
   login,
+  logout,
   register,
   resetPassword,
 } from "../controllers/auth.controller.js";
 import passport from "passport";
+import { authorize } from "../middlewares/authorize.js";
 
 const router = Router();
 
@@ -13,6 +16,9 @@ router.post("/login", login);
 router.post("/register", register);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
+router.post("/logout", logout);
+
+router.get("/me", authorize, getMe);
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
