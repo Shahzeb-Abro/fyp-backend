@@ -13,20 +13,31 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log("Google profile", profile);
         // Check if user already exists in our db
-        // const existingUser = await User.findOne({ googleId: profile.id });
-        // if (existingUser) {
-        //   return done(null, existingUser);
-        // }
+        const existingUser = await User.findOne({
+          $or: [{ googleId: profile.id }, { email: profile._json.email }],
+        });
 
-        // // If not, create a new user in our db
-        // const newUser = await new User({
-        //   googleId: profile.id,
-        //   username: profile.displayName,
-        //   imgUrl: profile._json.picture,
-        // }).save();
-        // done(null, newUser);
+        console.log("Existing user:", existingUser);
+
+        if (existingUser) {
+          if (existingUser.name !== profile._json.displayName)
+            existingUser.name = profile._json.displayName;
+          if (existingUser.imgUrl !== profile._json.picture)
+            existingUser.imgUrl = profile._json.picture;
+          await existingUser.save({ validateBeforeSave: false });
+          return done(null, existingUser);
+        }
+
+        // If not, create a new user in our db
+        const newUser = await new User({
+          googleId: profile.id,
+          name: profile.displayName,
+          imgUrl: profile._json.picture,
+          email: profile._json.email,
+          password: "doesnot matter",
+        }).save();
+        done(null, newUser);
       } catch (err) {
         console.error(err);
         done(err, null);

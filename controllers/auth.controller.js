@@ -15,14 +15,17 @@ const signToken = (id, res) => {
   res.cookie("jwt", token, {
     maxAge: 90 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    domain:
+      process.env.NODE_ENV === "production" ? ".shahzebabro.com" : undefined,
   });
   return token;
 };
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
+  ``;
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) {

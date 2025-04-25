@@ -20,9 +20,13 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login",
+    failureRedirect: `${process.env.FRONTEND_URL}/login`,
     successRedirect: process.env.FRONTEND_URL,
-  })
+    session: false,
+  }),
+  (req, res) => {
+    res.redirect(process.env.FRONTEND_URL);
+  }
 );
 
 export default router;
