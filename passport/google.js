@@ -18,9 +18,12 @@ passport.use(
           $or: [{ googleId: profile.id }, { email: profile._json.email }],
         });
 
+        console.log("Profile ", profile);
+        console.log("Existing User ", existingUser);
+
         if (existingUser) {
-          if (existingUser.name !== profile._json.displayName)
-            existingUser.name = profile._json.displayName;
+          if (existingUser.name !== profile._json.name)
+            existingUser.name = profile._json.name;
           if (existingUser.imgUrl !== profile._json.picture)
             existingUser.imgUrl = profile._json.picture;
           await existingUser.save({ validateBeforeSave: false });
@@ -30,7 +33,7 @@ passport.use(
         // If not, create a new user in our db
         const newUser = await new User({
           googleId: profile.id,
-          name: profile.displayName,
+          name: profile._json.name,
           imgUrl: profile._json.picture,
           email: profile._json.email,
           password: "doesnot matter",

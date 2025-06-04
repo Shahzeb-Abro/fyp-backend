@@ -12,3 +12,20 @@ export const getHistory = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+export const deleteHistory = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  await History.findByIdAndDelete(id);
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
+export const deleteAllHistory = catchAsync(async (req, res, next) => {
+  await History.deleteMany({ userId: req.user._id });
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
