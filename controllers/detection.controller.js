@@ -7,7 +7,6 @@ import { ID } from "node-appwrite";
 import axios from "axios";
 import fs from "fs";
 import FormData from "form-data";
-import path from "path";
 
 import History from "../models/history.model.js";
 
