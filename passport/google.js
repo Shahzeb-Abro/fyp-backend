@@ -10,8 +10,10 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      userProfileURL: "https://openidconnect.googleapis.com/v1/userinfo", // <-- add this line
     },
     async (accessToken, refreshToken, profile, done) => {
+      console.log("Profile ", profile);
       try {
         // Check if user already exists in our db
         const existingUser = await User.findOne({

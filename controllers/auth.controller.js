@@ -3,6 +3,7 @@ import catchAsync from "../utils/catchAsync.js";
 import User from "../models/user.model.js";
 import AppError from "../utils/appError.js";
 import Email from "../utils/email.js";
+import History from "../models/history.model.js";
 
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -179,5 +180,31 @@ export const logout = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
+  });
+});
+
+export const deleteMe = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    return next(new AppError("No such user exists", 404));
+  }
+
+  await History.deleteMany({ userId: user._id });
+
+  await user.deleteOne();
+
+  res.cookie("jwt", "loggedout", {
+    maxAge: 5 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    domain:
+      process.env.NODE_ENV === "production" ? ".shahzebabro.com" : undefined,
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "Account and all associated data have been deleted successfully",
   });
 });
